@@ -1,0 +1,54 @@
+version: "3.9"
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: test_db
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+  web:
+    image: app
+    command: npm run start
+    ports:
+      - "3000:3000"
+    depends_on:
+      seed:
+        condition: service_completed_successfully
+    links:
+      - db
+    environment:
+      DATABASE_URL: mysql://root:root_password@db:3306/test_db?schema=public&connect_timeout=300
+      NEXTAUTH_SECRET: supersecret
+  migrate:
+    build: .
+    image: app
+    command: npx prisma db push
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+    environment:
+      DATABASE_URL: mysql://root:root_password@host.docker.internal:3306/test_db?schema=public&connect_timeout=300
+      NEXTAUTH_SECRET: supersecret
+  seed:
+    image: app
+    command: npx prisma db seed
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    links:
+      - db
+    environment:
+      DATABASE_URL: mysql://root:root_password@host.docker.internal:3306/test_db?schema=public&connect_timeout=300
+      NEXTAUTH_SECRET: supersecret
+
+volumes:
+  db_data:

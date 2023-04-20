@@ -1,0 +1,47 @@
+{
+  "name": "testing-framework",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test-env": "docker run -e MYSQL_ROOT_PASSWORD=root_password -e MYSQL_DATABASE=test_db -p 3306:3306 --name test-env -d mysql:8.0 && npx prisma db push && npx prisma generate",
+    "test:e2e": "playwright test"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+  },
+  "dependencies": {
+    "@next-auth/prisma-adapter": "^1.0.6",
+    "@prisma/client": "^4.13.0",
+    "@radix-ui/react-avatar": "^1.0.2",
+    "@radix-ui/react-checkbox": "^1.0.3",
+    "@radix-ui/react-dropdown-menu": "^2.0.4",
+    "@radix-ui/react-navigation-menu": "^1.1.2",
+    "@types/react": "18.0.37",
+    "@types/react-dom": "18.0.11",
+    "autoprefixer": "10.4.14",
+    "class-variance-authority": "^0.5.2",
+    "clsx": "^1.2.1",
+    "eslint": "8.38.0",
+    "eslint-config-next": "13.3.0",
+    "lucide-react": "^0.166.0",
+    "next": "13.3.0",
+    "next-auth": "^4.22.1",
+    "postcss": "8.4.23",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "tailwind-merge": "^1.12.0",
+    "tailwindcss": "3.3.1",
+    "tailwindcss-animate": "^1.0.5"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.32.3",
+    "@types/node": "^18.15.12",
+    "prisma": "^4.13.0",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
